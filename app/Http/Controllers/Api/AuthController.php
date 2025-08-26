@@ -23,14 +23,15 @@ class AuthController extends Controller
             'password' => bcrypt($validated['password']),
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // kirim email verifikasi
+        $user->sendEmailVerificationNotification();
 
         return response()->json([
-            'message' => 'Register success',
+            'message' => 'Register success, please check your email for verification link',
             'user' => $user,
-            'token' => $token,
         ]);
     }
+
 
     public function login(Request $request)
     {
@@ -38,6 +39,10 @@ class AuthController extends Controller
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
+        }
+
+        if (! $user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Please verify your email first'], 403);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -51,8 +56,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
-
+        $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logout success']);
     }
 }
