@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Models\User;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\URL;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -14,10 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 });
-
-use App\Models\User;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Support\Facades\URL;
 
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
     $user = User::findOrFail($id);
