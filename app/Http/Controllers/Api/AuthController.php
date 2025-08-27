@@ -20,7 +20,8 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
+            'password' => Hash::make($validated['password']),
+            'role_id' => 2, // role otomatis jadi user biasa
         ]);
 
         // kirim email verifikasi

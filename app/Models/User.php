@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'role_id', // gunakan nama kolom sebenarnya
     ];
 
     /**
