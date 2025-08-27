@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('title'); // nama jasa
             $table->text('description'); // deskripsi jasa
             $table->decimal('price', 12, 2)->nullable(); // harga jasa (nullable dulu)
+            $table->decimal('average_rating', 3, 2)->default(0);
             $table->timestamps();
         });
     }

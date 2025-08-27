@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Service;
 
 class RatingController extends Controller
 {
@@ -29,13 +30,17 @@ class RatingController extends Controller
             'comment' => $request->comment,
         ]);
 
+        // update average rating service
+        $avg = Rating::where('service_id', $request->service_id)->avg('rating');
+        Service::where('id', $request->service_id)->update(['average_rating' => $avg]);
+
         return response()->json(['message' => 'Rating added', 'rating' => $rating]);
     }
 
     public function update(Request $request, $id)
     {
         $rating = Rating::findOrFail($id);
-        $rating->update($request->only('rating','comment'));
+        $rating->update($request->only('rating', 'comment'));
         return response()->json(['message' => 'Rating updated', 'rating' => $rating]);
     }
 
