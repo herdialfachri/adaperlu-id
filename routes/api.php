@@ -73,8 +73,8 @@ Route::middleware(['auth:sanctum', 'role_id:1,3'])->group(function () {
 
 // ratings
 Route::get('/services/{id}/ratings', [RatingController::class, 'index']);
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'role_id:2'])->group(function () {
     Route::post('/ratings', [RatingController::class, 'store']);
-    Route::put('/ratings/{id}', [RatingController::class, 'update']);
-    Route::delete('/ratings/{id}', [RatingController::class, 'destroy']);
+    // Route::put('/ratings/{id}', [RatingController::class, 'update']);
+    // Route::delete('/ratings/{id}', [RatingController::class, 'destroy']);
 });
