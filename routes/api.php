@@ -61,7 +61,9 @@ Route::middleware(['auth:sanctum', 'role_id:1'])->group(function () {
 // services
 Route::get('/services', [ServiceController::class, 'index']);
 Route::get('/services/{id}', [ServiceController::class, 'show']);
-Route::middleware('auth:sanctum')->group(function () {
+
+// hanya role 1 (admin) dan 3 (tukang) bisa CUD
+Route::middleware(['auth:sanctum', 'role_id:1,3'])->group(function () {
     Route::post('/services', [ServiceController::class, 'store']);
     Route::put('/services/{id}', [ServiceController::class, 'update']);
     Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
