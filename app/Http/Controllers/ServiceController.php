@@ -11,7 +11,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        return response()->json(Service::with('category', 'user')->get());
+        return response()->json(Service::all());
     }
 
     public function store(Request $request)
@@ -36,14 +36,14 @@ class ServiceController extends Controller
 
     public function show($id)
     {
-        $service = Service::with('category','user','ratings')->findOrFail($id);
-        return response()->json($service);
+        $services = Service::with('category', 'user', 'ratings')->get();
+        return response()->json($services);
     }
 
     public function update(Request $request, $id)
     {
         $service = Service::findOrFail($id);
-        $service->update($request->only('category_id','title','description','price'));
+        $service->update($request->only('category_id', 'title', 'description', 'price'));
         return response()->json(['message' => 'Service updated', 'service' => $service]);
     }
 
