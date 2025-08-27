@@ -58,9 +58,11 @@ Route::middleware(['auth:sanctum', 'role_id:1'])->group(function () {
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 });
 
-// services
-Route::get('/services', [ServiceController::class, 'index']);
-Route::get('/services/{id}', [ServiceController::class, 'show']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    // hanya bisa diakses jika sudah login
+    Route::get('/services', [ServiceController::class, 'index']);
+    Route::get('/services/{id}', [ServiceController::class, 'show']);
+});
 
 // hanya role 1 (admin) dan 3 (tukang) bisa CUD
 Route::middleware(['auth:sanctum', 'role_id:1,3'])->group(function () {
