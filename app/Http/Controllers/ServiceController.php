@@ -36,8 +36,7 @@ class ServiceController extends Controller
 
     public function show($id)
     {
-        $services = Service::with('category', 'user', 'ratings')->get();
-        return response()->json($services);
+        return response()->json(Service::all());
     }
 
     public function update(Request $request, $id)
