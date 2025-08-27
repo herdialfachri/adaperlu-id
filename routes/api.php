@@ -48,12 +48,15 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\RatingController;
 
-// categories
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/categories/{id}', [CategoryController::class, 'show']);
-Route::post('/categories', [CategoryController::class, 'store']); // bisa dibatasi admin nanti
-Route::put('/categories/{id}', [CategoryController::class, 'update']);
-Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+// Semua user login bisa GET
+Route::middleware(['auth:sanctum'])->get('/categories', [CategoryController::class, 'index']);
+
+// Hanya admin (role_id = 1) bisa CUD
+Route::middleware(['auth:sanctum', 'role_id:1'])->group(function () {
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{id}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+});
 
 // services
 Route::get('/services', [ServiceController::class, 'index']);
