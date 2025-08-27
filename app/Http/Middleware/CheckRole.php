@@ -8,13 +8,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, $role)
+    /**
+     * Handle an incoming request.
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  mixed ...$roles  // menerima satu atau lebih role
+     */
+    public function handle(Request $request, Closure $next, ...$roles)
     {
         $user = $request->user();
 
-        // Pastikan user login & cek field role_id
-        if (!$user || $user->role_id != $role) {
-            return response()->json(['message' => 'Forbidden. Only admin can access.'], Response::HTTP_FORBIDDEN);
+        if (!$user || !in_array($user->role_id, $roles)) {
+            return response()->json(['message' => 'Forbidden. You do not have permission.'], Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);
