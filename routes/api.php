@@ -4,9 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use App\Models\User;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Api\PasswordResetController;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -19,22 +16,15 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
-Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
-    $user = User::findOrFail($id);
-
-    if (! hash_equals(sha1($user->getEmailForVerification()), $hash)) {
-        return response()->json(['message' => 'Invalid verification link'], 403);
-    }
-
-    if ($user->hasVerifiedEmail()) {
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    if ($request->user()->hasVerifiedEmail()) {
         return response()->json(['message' => 'Email already verified']);
     }
 
-    $user->markEmailAsVerified();
-    event(new Verified($user));
+    $request->fulfill();
 
     return response()->json(['message' => 'Email verified successfully']);
-})->middleware(['signed'])->name('verification.verify');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/resend', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
