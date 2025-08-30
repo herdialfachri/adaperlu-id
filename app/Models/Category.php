@@ -10,6 +10,7 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'name',
         'description',
     ];
@@ -20,5 +21,13 @@ class Category extends Model
     public function services()
     {
         return $this->hasMany(Service::class, 'category_id', 'id');
+    }
+
+    /**
+     * Relasi dari tabel ini ke tabel user
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

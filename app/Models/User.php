@@ -79,4 +79,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(OrderHistory::class, 'changed_by', 'id');
     }
+
+    /**
+     * Relasi ke kategori yang ditambahkan oleh admin
+     */
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'user_id', 'id');
+    }
 }
