@@ -12,14 +12,13 @@ class Service extends Model
     protected $fillable = [
         'user_id',
         'category_id',
-        'title',
+        'service_name',
         'description',
         'price',
-        'average_rating',
     ];
 
     /**
-     * Relasi ke user/tukang yang menawarkan jasa ini
+     * Relasi dari tabel ini ke tabel user
      */
     public function user()
     {
@@ -27,7 +26,7 @@ class Service extends Model
     }
 
     /**
-     * Relasi ke kategori jasa
+     * Relasi dari tabel ini ke tabel category
      */
     public function category()
     {
@@ -35,10 +34,18 @@ class Service extends Model
     }
 
     /**
-     * Relasi ke rating jasa ini
+     * Relasi dari tabel rating ke tabel ini
      */
     public function ratings()
     {
         return $this->hasMany(Rating::class, 'service_id', 'id');
+    }
+
+    /**
+     * Relasi dari tabel order ke tabel ini
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'service_id', 'id');
     }
 }

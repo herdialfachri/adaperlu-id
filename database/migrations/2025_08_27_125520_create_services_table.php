@@ -9,13 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
-            $table->id(); // PK
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // tukang
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade'); // kategori jasa
-            $table->string('title'); // nama jasa
-            $table->text('description'); // deskripsi jasa
-            $table->decimal('price', 12, 2)->nullable(); // harga jasa (nullable dulu)
-            $table->decimal('average_rating', 3, 2)->default(0);
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->string('service_name');
+            $table->text('description');
+            $table->decimal('price', 12, 2);
             $table->timestamps();
         });
     }

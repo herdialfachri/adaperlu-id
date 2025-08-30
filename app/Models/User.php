@@ -21,7 +21,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role_id', // kolom role
+        'role_id',
+        'profile_photo',
+        'location',
+        'phone',
+        'specialization',
     ];
 
     /**
@@ -37,15 +41,12 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     /**
      * Relasi ke jasa (services) yang dimiliki user/tukang
@@ -61,5 +62,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function ratings()
     {
         return $this->hasMany(Rating::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relasi ke orders yang dibuat user
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relasi ke histori order yang diubah user/tukang/admin
+     */
+    public function orderHistories()
+    {
+        return $this->hasMany(OrderHistory::class, 'changed_by', 'id');
     }
 }

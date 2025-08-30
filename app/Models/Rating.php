@@ -12,6 +12,7 @@ class Rating extends Model
     protected $fillable = [
         'service_id',
         'user_id',
+        'order_id',
         'rating',
         'comment',
     ];
@@ -25,10 +26,18 @@ class Rating extends Model
     }
 
     /**
-     * Relasi ke user yang memberikan rating
+     * Relasi ke user yang memberi rating
      */
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relasi ke orderan yang diberi rating
+     */
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 }

@@ -19,14 +19,11 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-
-            // Tambahan untuk alur role
-            $table->tinyInteger('role_id')->default(2); // 1=admin, 2=user, 3=tukang
-
-            // Tambahan opsional untuk tukang
-            $table->string('profile_photo')->nullable(); // foto profil
-            $table->string('phone')->nullable();         // nomor kontak
-            $table->string('specialization')->nullable(); // bidang jasa (misal: atap, cat, sumur)
+            $table->tinyInteger('role_id')->default(2);
+            $table->string('profile_photo')->nullable();
+            $table->string('location')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('specialization')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
