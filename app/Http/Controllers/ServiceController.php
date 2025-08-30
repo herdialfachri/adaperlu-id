@@ -9,16 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
+    // Semua service
     public function index()
     {
-        return response()->json(Service::all());
+        return response()->json(Service::with(['user','category','ratings'])->get());
     }
 
+    // Tambah service baru
     public function store(Request $request)
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
+            'service_name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'nullable|numeric',
         ]);
@@ -26,30 +28,49 @@ class ServiceController extends Controller
         $service = Service::create([
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
-            'title' => $request->title,
+            'service_name' => $request->service_name,
             'description' => $request->description,
             'price' => $request->price,
         ]);
 
-        return response()->json(['message' => 'Service created', 'service' => $service]);
+        return response()->json([
+            'message' => 'Service created successfully',
+            'service' => $service
+        ], 201);
     }
 
+    // Detail service
     public function show($id)
     {
-        return response()->json(Service::all());
+        $service = Service::with(['user','category','ratings'])->findOrFail($id);
+        return response()->json($service);
     }
 
+    // Update service
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'category_id' => 'sometimes|exists:categories,id',
+            'service_name' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'price' => 'nullable|numeric',
+        ]);
+
         $service = Service::findOrFail($id);
-        $service->update($request->only('category_id', 'title', 'description', 'price'));
-        return response()->json(['message' => 'Service updated', 'service' => $service]);
+        $service->update($request->only('category_id', 'service_name', 'description', 'price'));
+
+        return response()->json([
+            'message' => 'Service updated successfully',
+            'service' => $service
+        ]);
     }
 
+    // Hapus service
     public function destroy($id)
     {
         $service = Service::findOrFail($id);
         $service->delete();
-        return response()->json(['message' => 'Service deleted']);
+
+        return response()->json(['message' => 'Service deleted successfully']);
     }
 }

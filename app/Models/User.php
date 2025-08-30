@@ -67,9 +67,16 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Relasi ke orders yang dibuat user
      */
-    public function orders()
+    public function customerOrders()
     {
+        // semua order yang dia buat sebagai customer
         return $this->hasMany(Order::class, 'user_id', 'id');
+    }
+
+    public function workerOrders()
+    {
+        // semua order yang dia kerjakan sebagai tukang
+        return $this->hasMany(Order::class, 'worker_id', 'id');
     }
 
     /**

@@ -15,6 +15,8 @@ class Category extends Model
         'description',
     ];
 
+    protected $with = ['user']; // otomatis load relasi user
+
     /**
      * Relasi ke jasa (services) yang termasuk kategori ini
      */
@@ -24,7 +26,7 @@ class Category extends Model
     }
 
     /**
-     * Relasi dari tabel ini ke tabel user
+     * Relasi ke user yang membuat kategori
      */
     public function user()
     {

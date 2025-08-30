@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('service_name');
             $table->text('description');
             $table->decimal('price', 12, 2);
+            $table->decimal('average_rating', 3, 2)->default(0);
             $table->timestamps();
         });
     }

@@ -14,15 +14,16 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('worker_id')->nullable()->constrained('users');
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
             $table->enum('status', ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled'])->default('pending');
             $table->date('start_date');
             $table->date('end_date');
             $table->decimal('unit_price', 10, 2);
             $table->decimal('total_price', 10, 2);
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->enum('payment_status', ['unpaid', 'paid'])->default('unpaid');
-            $table->string('payment_method')->nullable();
+            $table->enum('payment_method', ['transfer', 'cod']);
             $table->timestamps();
         });
     }

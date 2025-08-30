@@ -15,6 +15,7 @@ class Service extends Model
         'service_name',
         'description',
         'price',
+        'average_rating',
     ];
 
     /**

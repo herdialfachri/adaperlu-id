@@ -35,11 +35,11 @@ Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\RatingController;
-
 // Semua user login bisa GET
-Route::middleware(['auth:sanctum'])->get('/categories', [CategoryController::class, 'index']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{id}', [CategoryController::class, 'show']);
+});
 
 // Hanya admin (role_id = 1) bisa CUD
 Route::middleware(['auth:sanctum', 'role_id:1'])->group(function () {
@@ -48,23 +48,60 @@ Route::middleware(['auth:sanctum', 'role_id:1'])->group(function () {
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 });
 
+use App\Http\Controllers\ServiceController;
+
+// Semua user (sudah login) bisa lihat service
 Route::middleware(['auth:sanctum'])->group(function () {
-    // hanya bisa diakses jika sudah login
     Route::get('/services', [ServiceController::class, 'index']);
     Route::get('/services/{id}', [ServiceController::class, 'show']);
 });
 
-// hanya role 1 (admin) dan 3 (tukang) bisa CUD
+// Hanya admin (1) dan tukang (3) yang bisa CUD
 Route::middleware(['auth:sanctum', 'role_id:1,3'])->group(function () {
     Route::post('/services', [ServiceController::class, 'store']);
     Route::put('/services/{id}', [ServiceController::class, 'update']);
     Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
 });
 
-// ratings
+use App\Http\Controllers\RatingController;
+
+// ratings (semua orang bisa lihat rating service)
 Route::get('/services/{id}/ratings', [RatingController::class, 'index']);
+
+// kasih rating (cuma user)
 Route::middleware(['auth:sanctum', 'role_id:2'])->group(function () {
     Route::post('/ratings', [RatingController::class, 'store']);
-    // Route::put('/ratings/{id}', [RatingController::class, 'update']);
-    // Route::delete('/ratings/{id}', [RatingController::class, 'destroy']);
+});
+
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderHistoryController;
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    // Semua role bisa lihat order (difilter di controller)
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+
+    // Customer bikin order
+    Route::middleware('role_id:2')->group(function () {
+        Route::post('/orders', [OrderController::class, 'store']);
+        Route::post('/orders/{id}/complete', [OrderController::class, 'complete']); // customer menyelesaikan pesanan
+    });
+
+    // Worker action (accept/reject)
+    Route::middleware('role_id:3')->group(function () {
+        Route::post('/orders/{id}/action', [OrderController::class, 'workerAction']);
+    });
+
+    // Admin update order (status/pembayaran)
+    Route::middleware('role_id:1')->group(function () {
+        Route::put('/orders/{id}', [OrderController::class, 'update']);
+    });
+
+    // Semua role bisa lihat history
+    Route::get('/orders/{orderId}/histories', [OrderHistoryController::class, 'index']);
+    Route::get('/histories/{id}', [OrderHistoryController::class, 'show']);
+
+    Route::middleware(['auth:sanctum', 'role_id:2'])->group(function () {
+        Route::post('/orders/{id}/complete', [OrderController::class, 'markCompleted']);
+    });
 });

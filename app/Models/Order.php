@@ -11,6 +11,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+        'worker_id',
         'service_id',
         'status',
         'start_date',
@@ -19,15 +20,20 @@ class Order extends Model
         'total_price',
         'notes',
         'payment_status',
-        'payment_method,'
+        'payment_method',
     ];
 
     /**
      * Relasi dari tabel ini ke tabel user
      */
-    public function user()
+    public function customer()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function worker()
+    {
+        return $this->belongsTo(User::class, 'worker_id', 'id');
     }
 
     /**

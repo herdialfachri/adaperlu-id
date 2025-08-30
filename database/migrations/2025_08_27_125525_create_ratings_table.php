@@ -14,8 +14,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->tinyInteger('rating');
-            $table->text('comment');
+            $table->text('comment')->nullable();
             $table->timestamps();
+            $table->unique(['user_id', 'order_id']);
         });
     }
 
