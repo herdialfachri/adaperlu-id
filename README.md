@@ -14,6 +14,3 @@ Adaperlu adalah sistem yang dikembangkan untuk menghubungkan pengguna dengan pen
 - Android Studio
 - Visual Studio Code
 - Draw io
-# Class Diagram
-
-# Mobile Interfaces
