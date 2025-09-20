@@ -1,5 +1,5 @@
 # Adaperlu.id
-
+![Diagram Adaperlu](./public/adaperlu.png)
 # Background
 Adaperlu adalah sistem yang dikembangkan untuk menghubungkan pengguna dengan penyedia jasa rumah tangga. Layanan yang tersedia mencakup perbaikan genteng, sumur, listrik, dan kebutuhan rumah lainnya.
 # Developer
